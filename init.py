@@ -238,14 +238,14 @@ class Window3(tk.Tk):
         video_name =  "C:\\Users\\בטוח\\OneDrive\\שולחן העבודה\\עורך טקסט\\Lib\\images\\sound.mov"
         video = imageio.get_reader(video_name)
         frame = 0
-        while True:
-            for image in video.iter_data():
-                frame += 1  # counter to save new frame number
-                image_frame = Image.fromarray(image)
-                image_frame.save('images/frame_%d.png' % frame)  # if you need the frame you can save each frame to hd
-                frame_image = ImageTk.PhotoImage(image_frame)
-                label.config(image=frame_image)
-                label.image = frame_image
+        
+        for image in video.iter_data():
+            frame += 1  # counter to save new frame number
+            image_frame = Image.fromarray(image)
+            image_frame.save('images/frame_%d.png' % frame)  # if you need the frame you can save each frame to hd
+            frame_image = ImageTk.PhotoImage(image_frame)
+            label.config(image=frame_image)
+            label.image = frame_image
 
 
     def orange(self):
