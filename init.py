@@ -12,6 +12,8 @@ import database
 from PIL import Image, ImageTk
 import webbrowser
 from audioplayer import AudioPlayer
+import threading
+import imageio
 
 
 
@@ -37,15 +39,18 @@ class Window3(tk.Tk):
         self.my_menu.add_separator()
         self.my_menu.add_command(label="שלח דואר",command=self.send_mail,accelerator="F5")
         self.my_menu.add_command(label="יציאה", command=self.destroy,accelerator="Ctrl+Q")
-
+        self.label18 = tk.Label(self)
+        self.label18.place(x=200, y=630, height=100, width=1100)
         self.bind("<Button-3>",self.my_poup)
         self.bindkeys()
 
+
+        thread = threading.Thread(target=self.video_stream, args=(self.label18,))
+        thread.daemon = 1
+
+        thread.start()
 #######################################################################################################################
-        self.frame = tk.Frame(self, width=700, height=250, highlightbackground="black", highlightthickness=10)
-        #self.frame.place(x=250, y=200)
-        self.frame2 = tk.Frame(self, width=700, height=300, highlightbackground="black", highlightthickness=10)
-        #self.frame2.place(x=250, y=500)
+
         self.show_edit1 = tk.BooleanVar()
         self.show_edit1.set(True)
 
@@ -121,11 +126,8 @@ class Window3(tk.Tk):
 
 
 
-        self.open_sound = Image.open("images\\sound.gif")
-        self.photo_image = ImageTk.PhotoImage(self.open_sound)
-        self.label18 = tk.Label(self,font=("Ariel", 15, "bold"), fg="#414169",image=self.photo_image)
-        self.label18.image = self.photo_image
-        self.label18.place(x=200,y=630,height=100,width=1100)
+
+
 
 
 
@@ -231,10 +233,19 @@ class Window3(tk.Tk):
 
 
 
-
-
-
-
+    # function for video streaming
+    def video_stream(self,label):
+        video_name =  "C:\\Users\\בטוח\\OneDrive\\שולחן העבודה\\עורך טקסט\\Lib\\images\\sound.mov"
+        video = imageio.get_reader(video_name)
+        frame = 0
+        while True:
+            for image in video.iter_data():
+                frame += 1  # counter to save new frame number
+                image_frame = Image.fromarray(image)
+                image_frame.save('images/frame_%d.png' % frame)  # if you need the frame you can save each frame to hd
+                frame_image = ImageTk.PhotoImage(image_frame)
+                label.config(image=frame_image)
+                label.image = frame_image
 
 
     def orange(self):
@@ -271,8 +282,7 @@ class Window3(tk.Tk):
         self.label6.config(bg="black",fg="white")
 
 
-        self.frame.config(bg="white")
-        self.frame2.config(bg="white")
+
 
 
         self.button3.config(bg="black",fg="white",activebackground="black",activeforeground="white")
@@ -892,9 +902,7 @@ root1 = Window2()
 root1.mainloop()
 
 
-
-
-
 ########################################################################################################################
+
 
 
